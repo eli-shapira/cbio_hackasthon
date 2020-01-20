@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 import copy
 import pandas as pd
+import pprint
 
 
 def parse_args():
@@ -13,17 +14,34 @@ def parse_args():
     return parser.parse_args()
 
 
+# def count_length(struct_seq, lengths):
+#     prev_state = 'o'
+#     last_len = 0
+#     for i in range(len(struct_seq)):
+#         cur_state = struct_seq[i]
+#         if prev_state != cur_state:
+#             if prev_state != 'o':
+#                 if last_len not in lengths[prev_state]:
+#                     lengths[prev_state][last_len] = 0
+#                 lengths[prev_state][last_len] += 1
+#             last_len = 0
+#         else:
+#             last_len += 1
+#         prev_state = cur_state
+#     return lengths
+
+
 def count_length(struct_seq, lengths):
-    prev_state = 'o'
-    last_len = 0
-    for i in range(len(struct_seq)):
+    prev_state = struct_seq[0]
+    last_len = 1
+    for i in range(1, len(struct_seq)):
         cur_state = struct_seq[i]
         if prev_state != cur_state:
             if prev_state != 'o':
                 if last_len not in lengths[prev_state]:
                     lengths[prev_state][last_len] = 0
                 lengths[prev_state][last_len] += 1
-            last_len = 0
+            last_len = 1
         else:
             last_len += 1
         prev_state = cur_state
@@ -38,7 +56,7 @@ def count_length_file(path, ds):
             if all(k in ['o', 'T', 'H', 'S'] for k in Counter(line).keys()):
                 lengths = count_length(line, lengths)
             line = fd.readline().strip()
-    print(lengths)
+    print(pprint.pformat(lengths, indent=4, width=50, depth=3))
     title = ' lengths histogram %s' % ds
     plt.figure('TURN' + title)
     plt.bar(list(lengths['T']), lengths['T'].values(), color='g')
