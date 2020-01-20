@@ -84,16 +84,37 @@ def count_aag_dist_file(path, ds):
     df_aag_norm = (df.T / df_aag_sum).T # normalized by count of AA groups
     print(df_aag_norm)
     print(df_aag_norm.sum(axis=1))
-    # plt.figure()
-    plot = df.plot(logy=True)
+    
+    title = "count vs structure (log) %s" %ds
+    plot = df.T.plot(logy=True, title=title)
     fig = plot.get_figure()
-    fig.savefig("stats/count vs AA group (log) %s.png" %ds)
-    plot = df_struct_norm.plot()
+    fig.savefig('stats/' + title + '.png')
+
+    title = "count vs AA group (log) %s" %ds
+    plot = df.plot(logy=True, title=title)
     fig = plot.get_figure()
-    fig.savefig("stats/count vs AA group normalized by sum per structure %s.png" %ds)
-    plot = df_aag_norm.plot()
+    fig.savefig('stats/' + title + '.png')
+
+    title = "count vs AA group normalized by sum per structure %s" %ds
+    plot = df_struct_norm.plot(title=title)
     fig = plot.get_figure()
-    fig.savefig("stats/count vs AA group normalized by sum per AA group %s.png" %ds)
+    fig.savefig('stats/' + title + '.png')
+
+    title = "count vs structure normalized by sum per structure %s" %ds
+    plot = df_struct_norm.T.plot(title=title)
+    fig = plot.get_figure()
+    fig.savefig('stats/' + title + '.png')
+
+    title = "count vs AA group normalized by sum per AA group %s" %ds
+    plot = df_aag_norm.plot(logy=True, title=title)
+    fig = plot.get_figure()
+    fig.savefig('stats/' + title + '.png')
+
+    title = "count vs structure normalized by sum per AA group %s" %ds
+    plot = df_aag_norm.T.plot(logy=True, title=title)
+    fig = plot.get_figure()
+    fig.savefig('stats/' + title + '.png')
+
     plt.show()
     
     
