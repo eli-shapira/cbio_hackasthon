@@ -12,7 +12,7 @@ class Protein:
         self.structure = self.replace_states(structure)[:-1]
         self.to_drop = False
         other_count = self.structure.count('O')
-        if other_count / self.len > 0.85:
+        if other_count / self.len > 0.8:
             self.to_drop = True
         self.structure = 's' + self.structure + 'e'
 
