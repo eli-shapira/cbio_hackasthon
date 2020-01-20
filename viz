@@ -1,0 +1,101 @@
+import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+# sphinx_gallery_thumbnail_number = 2
+
+#Can show a similiary matrix , emission , transition.
+def show_heat_map(accuracy_2d,x_axis,y_axis,color='r'):
+    """
+    Recieves 2d np array , and axis names and prints the matrix with the heat method.
+    :param accuracy_2d:
+    :param x_axis:
+    :param y_axis:
+    :param color: the color of the text
+    :return:
+    """
+    fig, ax = plt.subplots()
+    im = ax.imshow(accuracy_2d,cmap='Blues_r')
+    # We want to show all ticks...
+    ax.set_xticks(np.arange(len(x_axis)))
+    ax.set_yticks(np.arange(len(y_axis)))
+    # ... and label them with the respective list entries
+    ax.set_xticklabels(x_axis)
+    ax.set_yticklabels(y_axis)
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor"     )
+    # Loop over data dimensions and create text annotations.
+    for i in range(len(y_axis)):
+        for j in range(len(x_axis)):
+            text = ax.text(j, i, accuracy_2d[i, j],
+                           ha="center", va="center", color=color)
+    ax.set_title("Confusion Matrix")
+    fig.tight_layout()
+    plt.show()
+
+
+
+
+
+def create_sizes(protiens):
+    """
+    Recieves protiens and count the distrubtions of the states , then shows a pie chart of them
+    :param protiens:
+    :return:
+    """
+    counter_a=0
+    counter_b=0
+    counter_t=0
+    counter_o=0
+
+    for seq in protiens:
+        for char in seq:
+            if char=='A':
+                counter_a+=1
+            if char=='B':
+                counter_b+=1
+            if char=='T':
+                counter_t+=1
+            if char=='O':
+                counter_o+=1
+    create_pie_chart([counter_a,counter_b,counter_t,counter_o])
+def create_pie_chart(sizes):
+    # Pie chart, where the slices will be ordered and plotted counter-clockwise:
+    labels = 'Alpha', 'Beta', 'Turn', 'Others'
+   # only "explode" the 2nd slice (i.e. 'Hogs')
+    colors = ['red', 'blue', 'green', 'grey']
+
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+            shadow=True, startangle=90,colors=colors)
+    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.show()
+from globs import *
+
+def evaluate( true_structure, our_prediciton):
+    """
+    Evaluates the accuracy btw the true and our pred , also shows a heat confusion matrix which indicate what's
+    the most popular error.
+    :param true_structure:
+    :param our_prediciton:
+    :return:
+    """
+    matches = 0
+    total = 0
+    confusion_matrix = np.zeros((4, 4))
+    for strc_true, strc_our in zip(true_structure, our_prediciton):
+
+        for i in range(len(strc_true)):
+            char_our = strc_our[i]
+            char_true = strc_true[i]
+            if strc_our[i] == strc_true[i]:
+                matches += 1
+            else:
+                confusion_matrix[STATE_TO_INDEX[char_our]-1, STATE_TO_INDEX[char_true]-1] += 1
+            total += 1
+    show_heat_map(confusion_matrix, ["Alpha","Beta","Turn","Other"],["Alpha","Beta","Turn","Other"])
+    return matches / total
+
+
+
