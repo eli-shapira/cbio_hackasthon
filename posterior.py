@@ -70,9 +70,9 @@ def calculate_posterior(seq, transition_matrix, emission_matrix):
     return forward_matrix + backward_matrix
 
 def trace_states(seq, posterior_matrix):
-    trace = STATES[int(np.argmax(posterior[:, -1]))]
+    trace = STATES[int(np.argmax(posterior_matrix[:, -1]))]
     for j in range(1, len(seq)):
-        trace += STATES[int(np.argmax(posterior[:, -j-1]))]
+        trace += STATES[int(np.argmax(posterior_matrix[:, -j-1]))]
     trace = trace[::-1]
     return trace
 
