@@ -74,7 +74,27 @@ def count_aag_dist_file(path, ds):
             line = fd.readline().strip()
     df = pd.DataFrame(counts)
     print(df)
-    df.plot()
+    df_struct_sum = df.sum(axis=0)
+    print(df_struct_sum)
+    df_struct_norm = df / df_struct_sum # normalized by count of structures
+    print(df_struct_norm)
+    print(df_struct_norm.sum(axis=0))
+    df_aag_sum = df.sum(axis=1)
+    print(df_aag_sum)
+    df_aag_norm = (df.T / df_aag_sum).T # normalized by count of AA groups
+    print(df_aag_norm)
+    print(df_aag_norm.sum(axis=1))
+    # plt.figure()
+    plot = df.plot(logy=True)
+    fig = plot.get_figure()
+    fig.savefig("stats/count vs AA group (log) %s.png" %ds)
+    plot = df_struct_norm.plot()
+    fig = plot.get_figure()
+    fig.savefig("stats/count vs AA group normalized by sum per structure %s.png" %ds)
+    plot = df_aag_norm.plot()
+    fig = plot.get_figure()
+    fig.savefig("stats/count vs AA group normalized by sum per AA group %s.png" %ds)
+    plt.show()
     
     
 
