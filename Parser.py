@@ -1,9 +1,11 @@
-from Protein import Protein
+import Protein
 import re
 import HMM, apply_hmm
 import sys
 import random
 from sklearn.model_selection import train_test_split
+from posterior import*
+from globs import*
 
 
 #patters
@@ -64,7 +66,7 @@ def parse_file(path):
         elif keywords_state:
             if line.startswith('++'):
                 keywords_state = False
-                protein = Protein(name, aa_seq, group_seq, keywords, structure)
+                protein = Protein.Protein(name, aa_seq, group_seq, keywords, structure)
                 if not protein.to_drop:
                     proteins.append(protein)
                 name = None
@@ -85,15 +87,65 @@ def parse_file(path):
     return proteins
 
 
-if __name__ == '__main__':
-    p_list = parse_file('prot_data_yeast.txt')
+def evaluate(true_structure, our_prediciton):
+    matches = 0
+    total = 0
+    for strc_true, strc_our in zip(true_structure, our_prediciton):
 
-    ind = int(len(p_list) / 2)
+        for i in range(len(strc_true)):
+            curr_prb = 0
+            if len(strc_true) != len(strc_our):
+                print(strc_our)
+                print(strc_true)
+                print(len(strc_true))
+                print(len(strc_our))
+                print("oh no")
+                exit(1)
+            if strc_our[i] == strc_true[i]:
+                matches += 1
+            total += 1
+
+    return matches/total
+
+
+if __name__ == '__main__':
+    proteins = parse_file('prot_data_human.txt')
+    # for p in p_list:
+    #     print(p.keywords)
+
+    p_train = proteins[:510]
+    p_test = proteins[510:]
     # indeces = [i for i in range(len(p_list))]
     # train_i = random.sample(indeces, 300)
     # test_i = i
 
+    emissions = init_emissions_group(p_train, True)
+    transitions = init_transitions(p_train, True)
+    emissions_matrix = emission_to_matrix(emissions)
+    transitions_matrix = transition_to_matrix(transitions)
 
-    test_p = p_list[300:500]
-    train_p = p_list[:300]
-    hmm = apply_hmm.HMM(train_p, test_p)
+    # seq = "0112233446"
+    # posterior = calculate_posterior(seq, transitions_matrix, emissions_matrix)
+    # print(posterior, "\n")
+
+    true = []
+    pred = []
+    for p in p_test:
+        matrix = calculate_posterior_group(p.group_seq, transitions_matrix, emissions_matrix)
+        trace = trace_states(p.group_seq, matrix)
+        # matrix, trace = calculate_viterbi(p.group_seq, transitions_matrix, emissions_matrix)
+        pred.append(trace)
+        true.append(p.structure)
+        try:
+            print(trace[:60])
+            print(p.structure[:60])
+            print("======================================")
+        except IndexError:
+            continue
+
+    err = evaluate(true, pred)
+    print(err)
+
+    # test_p = p_list[-2:]
+    # train_p = p_list[:-2]
+    # hmm = apply_hmm.HMM(train_p, test_p)
