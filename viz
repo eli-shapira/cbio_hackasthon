@@ -75,7 +75,7 @@ from globs import *
 
 def evaluate( true_structure, our_prediciton):
     """
-    Evaluates the accuracy btw the true and our pred , always shows a heat confusion matrix which indicate what's
+    Evaluates the accuracy btw the true and our pred , also shows a heat confusion matrix which indicate what's
     the most popular error.
     :param true_structure:
     :param our_prediciton:
