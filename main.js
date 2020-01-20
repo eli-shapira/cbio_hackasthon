@@ -15,7 +15,8 @@ const filters = {
 }
 
 
-var prot_list = require('./prot_list');
+var human_list = require('./human_prot_list');
+var yeast_list = require('./yeast_prot_list');
 
 
 const UNIPORT_PATH = prot => `https://www.uniprot.org/uniprot/${prot}.txt`;
@@ -89,7 +90,8 @@ if (program_arguments.length > 2 && program_arguments[2] === 'stdin') {
         console.log(input);
     });
 } else {
-    run_all(UNIPORT_PATH, prot_list, 10, parse_uniport, filters.returnALL).catch(err => console.log(err));
+    // run_all(UNIPORT_PATH, yeast_list, 10, parse_uniport, filters.returnALL).catch(err => console.log(err));
+    run_all(UNIPORT_PATH, human_list, 10, parse_uniport, filters.returnALL).catch(err => console.log(err));
     // run_all(UNIPORT_PATH, ['P02730'], 10, parse_uniport, filters.returnALL);
 }
 
