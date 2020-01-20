@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+from globs import *
 
 class HMM:
 
@@ -36,23 +37,21 @@ class HMM:
         :param train_p:
         :return:
         """
-        aa_groups = {str(key): 0 for key in range(1, 6)}
-        O, H, S, T = copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups)
-        states = {'O': O, 'H': H, 'S': S, 'T': T}
+        A_tr, B_tr, T_tr, O_tr = copy.deepcopy(EMISSIONS), copy.deepcopy(EMISSIONS), copy.deepcopy(EMISSIONS), copy.deepcopy(EMISSIONS)
+        states = {'A': A_tr, 'B': B_tr, 'T': T_tr, 'O': O_tr}
         for p in train_p:
             for i in range(p.len):
                 # states[p[i]] returns the dictionary of the state
                 states[p.structure[i]][p.group_seq[i]] += 1
 
         # e = np.zeros((4, 5), dtype=np.float)
-        aa_groups = {str(key): 0 for key in range(1, 6)}
-        O, H, S, T = copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups)
-        emission_prob = {'O': O, 'H': H, 'S': S, 'T': T}
+        A_tr, B_tr, T_tr, O_tr = copy.deepcopy(EMISSIONS), copy.deepcopy(EMISSIONS), copy.deepcopy(EMISSIONS), copy.deepcopy(EMISSIONS)
+        emission_prob = {'A': A_tr, 'B': B_tr, 'T': T_tr, 'O': O_tr}
         counter = 0
         for k, s in states:
             sum_of_aa = np.sum([a for a in s.values()]).astype(np.float)
-            for aa in range(1, 6):
-                emission_prob[k][str(aa)] = s[str(aa)] / sum_of_aa
+            for i in range(NUM_EMISSIONS):
+                emission_prob[k][str(i+1)] = s[str(i+1)] / sum_of_aa
                 # e[counter, aa - 1] = s[str(aa)] / sum_of_aa
             counter += 1
 
