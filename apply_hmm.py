@@ -1,8 +1,9 @@
 import numpy as np
+import copy
 
 class HMM:
 
-    def __init__(self, train_p, test_proteins):
+    def __init__(self, train_p, test_p):
         """
         :param seq: the sequence
         :param initial_emission: n initial emission matrix: initial_emission.tsv - deﬁnes the emission probabilities
@@ -14,6 +15,18 @@ class HMM:
         """
         self.e = self.init_emission(train_p)
 
+    class Protein:
+
+        def __init__(self, seq, states):
+            self.len = len(seq)
+            self.group_seq = seq
+            self.structure = states
+            if len(seq) != len(states):
+                print("len seq")
+                print(len(seq))
+                print(len(states))
+                print(len(states))
+                exit(1)
 
     def init_emission(self, train_p):
         """
@@ -21,19 +34,25 @@ class HMM:
         :param train_p:
         :return:
         """
-        aa_groups = {key: 0 for key in range(1, 6)}
-        O, H, S, T = aa_groups, aa_groups, aa_groups, aa_groups
-        states = {'O': O, 'H': O, 'S': O, 'T': O}
+        aa_groups = {str(key): 0 for key in range(1, 6)}
+        O, H, S, T = copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups)
+        states = {'O': O, 'H': H, 'S': S, 'T': T}
         for p in train_p:
             for i in range(p.len):
                 # states[p[i]] returns the dictionary of the state
-                states[p.structure[i]][p.group_seq] += 1
+                states[p.structure[i]][p.group_seq[i]] += 1
 
         e = np.zeros((4, 5), dtype=np.float)
-        for state in states:
-            sum_of_aa = np.sum([c for c in t.values for t in state.values()]).astype(np.float)
+        counter = 0
+        for s in states.values():
+            sum_of_aa = np.sum([a for a in s.values()]).astype(np.float)
             for aa in range(1, 6):
-                e[state, aa] = state[aa] / sum_of_aa
+                e[counter, aa - 1] = s[str(aa)] / sum_of_aa
+            counter += 1
 
+        print(e)
         return e
 
+
+if __name__ == "__main__":
+    hmm = HMM(1, 2)
