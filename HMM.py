@@ -5,8 +5,8 @@ print("3")
 #structure
 def get_transition_prbs(seqs):
 
-    states_dict = {'O' : 3 , 'H' : 2, 'T':1,'S':0}
-    transition_counter ,starting_counter= count_transitions(seqs, states_dict)
+    states_dict = {'end':5,'O' : 4 , 'T' : 3, 'S':2,'H':1,'start':0}
+    transition_counter= count_transitions(seqs, states_dict)
 
     print(transition_counter)
     MLE = calculate_MLE(transition_counter)
@@ -17,7 +17,7 @@ def get_transition_prbs(seqs):
 def calculate_MLE(transition_counter):
 
 
-    MLE = np.zeros((4, 4))
+    MLE = np.zeros((5, 6))
 
     for row, i in zip(transition_counter,range(transition_counter.shape[1])):
         for val, j in zip(row,range(row.shape[0])):
@@ -29,24 +29,26 @@ def calculate_MLE(transition_counter):
 
 
 def count_transitions(seqs, states_dict):
-    transition_counter = np.zeros((4, 4))
-    starting_transition=np.zeros(4)
+    transition_counter = np.zeros((5, 6))
     for seq in seqs:
-        for i in range(len(seq) - 1):
+        for i in range(len(seq)):
             if i==1:
-                starting_transition[states_dict[seq[i]]]+=1
+                transition_counter[0,states_dict[seq[i]]]+=1
+                continue
+            if i== len(seq)-1:
+                transition_counter[states_dict[seq[i]],5]+=1
                 continue
             cur_state_index = states_dict[seq[i]]
             next_state_index = states_dict[seq[i + 1]]
             transition_counter[cur_state_index, next_state_index] += 1
-    return transition_counter,starting_transition
+    return transition_counter
 
-MLE=get_transition_prbs(["STHSTHSHSHSHSOHTTTOSTSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS", 'HHHHOTOOTOTOTOHHOTHOT'])
+MLE=get_transition_prbs(["SSSSSSST","STHSTHSHSHSHSOHTTTOSTSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSO", 'HHHHOTOOTOTOTOHHOTHOT'])
 
 
 def numpy_to_dict(transition):
 
-    index_to_state={0:'S',1:'T',2:'H',3:'O'}
+    index_to_state={0:'start',1:'H',2:'S',3:'T',4:'O',5:'end'}
     transition_prb={}
     for state_col,i in zip(transition,range(transition.shape[0])):
         inner_dict={}
@@ -118,4 +120,4 @@ def Viterbit(obs, states, s_pro, t_pro, e_pro):
 
 if __name__ == '__main__':
 	obs = ['normal', 'cold', 'dizzy']
-	print (Viterbit(obs, states, start_probability, transition_probability, emission_probability))
+	# print (Viterbit(obs, states, start_probability, transition_probability, emission_probability))
