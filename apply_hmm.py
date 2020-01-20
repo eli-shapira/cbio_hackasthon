@@ -14,6 +14,8 @@ class HMM:
         contains a motif. For q = 1, we get an OOPS model.
         """
         self.e = self.init_emission(train_p)
+        self.t = self.init_transmission(train_p)
+        self.viterbi(test_p)
 
     class Protein:
 
@@ -42,16 +44,20 @@ class HMM:
                 # states[p[i]] returns the dictionary of the state
                 states[p.structure[i]][p.group_seq[i]] += 1
 
-        e = np.zeros((4, 5), dtype=np.float)
+        # e = np.zeros((4, 5), dtype=np.float)
+        aa_groups = {str(key): 0 for key in range(1, 6)}
+        O, H, S, T = copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups), copy.deepcopy(aa_groups)
+        emission_prob = {'O': O, 'H': H, 'S': S, 'T': T}
         counter = 0
-        for s in states.values():
+        for k, s in states:
             sum_of_aa = np.sum([a for a in s.values()]).astype(np.float)
             for aa in range(1, 6):
-                e[counter, aa - 1] = s[str(aa)] / sum_of_aa
+                emission_prob[k][str(aa)] = s[str(aa)] / sum_of_aa
+                # e[counter, aa - 1] = s[str(aa)] / sum_of_aa
             counter += 1
 
-        print(e)
-        return e
+        print(emission_prob)
+        return emission_prob
 
 
 if __name__ == "__main__":
