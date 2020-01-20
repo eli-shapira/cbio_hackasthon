@@ -31,14 +31,14 @@ def calculate_viterbi(seq, transition_matrix, emission_matrix):
             trace_matrix[i, j] = np.argmax(vec)
 
     # traceback state sequence
+    trace = STATES[-1]
     index = np.argmax(viterbi_matrix[:, -1])
-    trace = str(int(trace_matrix[index, -1]))
-    for j in range(len(seq)-1):
-        index = int(trace[-1])
-        trace += str(int(trace_matrix[index, -j-1]))
+    trace += STATES[int(trace_matrix[index, -1])]
+    for j in range(len(seq)-3):
+        index = int(STATE_TO_INDEX[trace[-1]])
+        trace += STATES[int(trace_matrix[index, -j-2])]
+    trace += STATES[0]
     trace = trace[::-1]
-    print(trace)
-    print(trace_matrix)
     
     return viterbi_matrix, trace
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     emissions_matrix = emission_to_matrix(emissions)
     transitions_matrix = transition_to_matrix(transitions)
 
-    seq = "0112233446"
+    seq = "01111111111116"
     #posterior = calculate_posterior(seq, transitions_matrix, emissions_matrix)
     #print(posterior, "\n")
 
