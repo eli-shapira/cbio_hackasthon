@@ -15,7 +15,7 @@ END = "\033[00m"
 
 SIMPLE_STATES = ['s', 'A', 'B', 'T', 'O', 'e']
 MULTI_STATES = ['s', '@', 'a', 'A', '&', 'b', 'B', '!', 't', 'T', 'O', 'e']
-STATES = SIMPLE_STATES
+STATES = MULTI_STATES
 STATE_TO_INDEX = {l: STATES.index(l) for l in STATES}
 NUM_STATES = len(STATES)
 

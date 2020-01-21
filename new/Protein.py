@@ -81,9 +81,9 @@ class Protein:
         return matches/total
 
     def to_3_states(self):
-        self.is_3_states = True
         if not self.is_3_states:
             self.structure = 's' + build_structure3(self.structure[1:-1]) + 'e'
+        self.is_3_states = True
 
     def to_1_states(self):
         self.is_3_states = False

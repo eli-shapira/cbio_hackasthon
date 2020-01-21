@@ -2,6 +2,7 @@ from globs import *
 from parser import *
 from trainer import *
 from algos import *
+from Protein import revert_structure3
 
 def filter_by_keyword(proteins, kw):
     print("filtering proteins by keyword:",RED,kw,END)
@@ -87,6 +88,9 @@ def main():
     #pred_viterbi = batch_viterbi(seqs, transitions, emissions)
     for p in p_test:
         pred = calculate_posterior(p.group_seq, transitions, emissions)
+        # pred = calculate_viterbi(p.group_seq, transitions, emissions)
+        # pred = revert_structure3(pred)
+        print(pred[:100])
         p.evaluate_prediction(pred)
 
     score_histogram(p_test, all_keywords)
