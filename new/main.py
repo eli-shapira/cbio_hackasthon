@@ -83,7 +83,7 @@ def main():
         for p in p_test:
             p.to_1_states()
 
-    p_test = sorted(p_test, key=lambda x: len(x.group_seq))
+    p_test = sorted(p_test, key=lambda x: x.len)
     
     true = [p.structure for p in p_test]
     seqs = [p.group_seq for p in p_test]
@@ -93,16 +93,21 @@ def main():
     
     #pred_bi = batch_posterior(seqs, transitions, emissions_bi, True)
     #pred_viterbi = batch_viterbi(seqs, transitions, emissions)
+    acc = 0
+    sum_len = 0
     for p in p_test:
         print(len(p.group_seq))
         pred = calculate_posterior(p.group_seq, transitions, emissions)
         # pred = calculate_viterbi(p.group_seq, transitions, emissions)
         # pred = revert_structure3(pred)
         # print(pred[:100])
-        p.evaluate_prediction(pred)
+        eva = p.evaluate_prediction(pred)
+        acc += eva * p.len
+        sum_len += p.len
 
     score_histogram(p_test, all_keywords)
     average_score(p_test)
+    print(acc / sum_len)
 
 
 if __name__ == "__main__":
