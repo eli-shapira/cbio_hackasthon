@@ -6,6 +6,7 @@ import random
 from sklearn.model_selection import train_test_split
 from posterior import*
 from globs import*
+import itertools
 
 
 #patters
@@ -128,16 +129,20 @@ def evaluate(true_structure, our_prediciton):
 
 
 if __name__ == '__main__':
-    proteins = parse_file('prot_data_human')
+    proteins = parse_file('prot_data_yeast')
+    proteins += parse_file('prot_data_human')
     print(len(proteins))
     # print([p.name for p in proteins])
     # for p in p_list:
     #     print(p.keywords)
 
-    p_train = proteins[:4000]
-    p_test = proteins[4000:]
+    proteins = list(itertools.permutations(proteins))
 
-    emissions = init_emissions_group(p_train, True)
+    p_train = proteins[:5000]
+    p_test = proteins[5000:]
+
+    # emissions = init_emissions_group(p_train, True)
+    emissions = init_emissions(p_train, True)
     transitions = init_transitions(p_train, True)
     emissions_matrix = emission_to_matrix(emissions)
     transitions_matrix = transition_to_matrix(transitions)
@@ -149,14 +154,19 @@ if __name__ == '__main__':
     true = []
     pred = []
     for p in p_test:
-        matrix = calculate_posterior_group(p.group_seq, transitions_matrix, emissions_matrix)
-        trace = trace_states(p.group_seq, matrix)
+        # matrix = calculate_posterior_group(p.group_seq, transitions_matrix, emissions_matrix)
+        # trace = trace_states(p.group_seq, matrix)
+        matrix = calculate_posterior(p.aa_seq, transitions_matrix, emissions_matrix)
+        trace = trace_states(p.aa_seq, matrix)
         # matrix, trace = calculate_viterbi(p.group_seq, transitions_matrix, emissions_matrix)
+        trace = Protein.revert_structure3(trace)
         pred.append(trace)
+        p.to_1_states()
         true.append(p.structure)
         try:
             print(trace[:60])
             print(p.structure[:60])
+            assert len(trace) == len(p.structure)
             print("======================================")
         except IndexError:
             continue

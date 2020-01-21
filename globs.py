@@ -8,14 +8,19 @@ YELLOW = "\033[93m"
 PURPLE = "\033[35m"
 END = "\033[00m"
 
-STATES = ['s', 'A', 'B', 'T', 'O', 'e']
-STATE_TO_INDEX = {'s':0, 'A':1, 'B':2, 'T':3, 'O':4, 'e':5}
+# STATES = ['s', 'A', 'B', 'T', 'O', 'e']
+# STATE_TO_INDEX = {'s':0, 'A':1, 'B':2, 'T':3, 'O':4, 'e':5}
+
+STATES = ['s', '@', 'a', 'A', '&', 'b', 'B', '!', 't', 'T', 'O', 'e']
+STATE_TO_INDEX = {l: STATES.index(l) for l in STATES}
+
+
 NUM_STATES = len(STATES)
 
 
 # start, negative, positive, polar, hydrophobic, special, end
-EMISSIONS = ['0', '1', '2', '3', '4', '5', '6']
-# EMISSIONS = ['0', 'G', 'M', 'L', 'N', 'A', 'S', 'F', 'Y', 'T', 'I', 'W', 'Q', 'C', 'P', 'D', 'V', 'E', 'H', 'K', 'R', '1']
+# EMISSIONS = ['0', '1', '2', '3', '4', '5', '6']
+EMISSIONS = ['0', 'G', 'M', 'L', 'N', 'A', 'S', 'F', 'Y', 'T', 'I', 'W', 'Q', 'X', 'U', 'C', 'P', 'D', 'V', 'E', 'H', 'K', 'R', '1']
 NUM_EMISSIONS = len(EMISSIONS)
 
 # class Protein:
@@ -149,6 +154,39 @@ def init_transitions(proteins, to_print=False):
         print_transitions(dict2)
 
     return dict2
+
+
+# def init_transitions3(proteins, to_print=False):
+#     """
+#     Init the transition matrix
+#     :param proteins:
+#     :return:
+#     """
+#     dict1, dict2, counter = {}, {}, {}
+#     for st in STATES3:
+#         counter[st] = 0
+#     for st in STATES3:
+#         dict1[st] = copy.deepcopy(counter)
+
+#     structure = build_structure3(p.structure)
+#     for p in proteins:
+#         for i in range(p.len-1):
+#             dict1[p.structure[i]][p.structure[i+1]] += 1
+
+#     for i in STATES3:
+#         dict2[i] = copy.deepcopy(counter)
+#         transition_sum = np.sum([a for a in dict1[i].values()]).astype(np.int)
+#         for j in STATES3:
+#             if transition_sum == 0:
+#                 dict2[i][j] = 0
+#                 continue
+#             dict2[i][j] = dict1[i][j] / transition_sum
+
+#     if to_print:
+#         print(PURPLE+"### Transitions ###"+END)
+#         print_transitions(dict2)
+
+#     return dict2
 
 if __name__ == "__main__":
     p1 = Protein("AAAAAAA","0111116","sAAAAAe")
