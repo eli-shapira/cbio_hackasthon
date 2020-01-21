@@ -59,8 +59,7 @@ class Protein:
 
     def replace_states(self, s):
         return s.replace('H', 'A').replace('S', 'B').replace('o', 'O')
-<<<<<<< HEAD
-        
+
     def evaluate_prediction(self, pred):
         self.prediction = pred
         matches = 0
@@ -80,7 +79,6 @@ class Protein:
         self.score = matches/total
         print("evaluated",self.name[:-1],":",self.score)
         return matches/total
-=======
 
     def to_3_states(self):
         self.is_3_states = True
@@ -90,4 +88,3 @@ class Protein:
     def to_1_states(self):
         self.is_3_states = False
         self.structure = 's' + revert_structure3(self.structure[1:-1]) + 'e'
->>>>>>> 42ff19cb04290fedc23bf2181e2ebcc7f396ddf6

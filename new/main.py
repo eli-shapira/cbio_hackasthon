@@ -2,9 +2,11 @@ from globs import *
 from parser import *
 from trainer import *
 from algos import *
-from Protein import revert_structure3
 
 def filter_by_keyword(proteins, kw):
+    print("filtering proteins by keyword:",RED,kw,END)
+    filtered = [p for p in proteins if kw in p.keywords]
+    print("filtered",len(filtered),"from",len(proteins))
     return [p for p in proteins if kw in p.keywords]
     
 def print_sorted_dict(dct):    
@@ -38,22 +40,34 @@ def score_histogram(proteins, all_keywords):
 
     return counter
 
+def average_score(proteins):
+    count = 0
+    for p in proteins:
+        count += p.score
+    avg = count / len(proteins)
+    print("average score:",RED,avg,END)
+    return count / len(proteins)
 
 def main():
 
-    PATH = 'data/prot_data_human'
+    PATH = 'data/prot_data_yeast'
     proteins = parse_file(PATH)
     print("len proteins:", len(proteins))
 
-    p_train = proteins[:3000]
-    p_test = proteins[100:200]
+    #fil = filter_by_keyword(proteins, "Zinc-finger")
+    #fil = filter_by_keyword(proteins, "Transcription regulation")
+    #fil = filter_by_keyword(fil, "Transcription")
+    fil = proteins
+
+    idx = len(fil)//10
+    p_train = fil[:idx*9]
+    p_test = fil[idx*9+1::]
+    print("training:",(idx*9), "test",str(len(fil)-idx*9))
 
     if 'a' in STATES:
         for p in proteins:
             p.to_3_states()
 
-    p_train = proteins[:10000]
-    p_test = proteins[501:800]
 
     transitions = init_transitions(p_train)
     #emissions_bi = init_emissions_bi(p_train)
@@ -62,6 +76,7 @@ def main():
     if 'a' in STATES:
         for p in p_test:
             p.to_1_states()
+    
     true = [p.structure for p in p_test]
     seqs = [p.group_seq for p in p_test]
     print("testing")
@@ -75,7 +90,7 @@ def main():
         p.evaluate_prediction(pred)
 
     score_histogram(p_test, all_keywords)
-
+    average_score(p_test)
 
 
 if __name__ == "__main__":
