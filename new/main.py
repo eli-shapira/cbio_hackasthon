@@ -2,6 +2,7 @@ from globs import *
 from parser import *
 from trainer import *
 from algos import *
+from Protein import revert_structure3
 
 def filter_by_keyword(proteins, kw):
     return [p for p in proteins if kw in p.keywords]
@@ -47,11 +48,22 @@ def main():
     p_train = proteins[:3000]
     p_test = proteins[100:200]
 
+    if 'a' in STATES:
+        for p in proteins:
+            p.to_3_states()
+
+    p_train = proteins[:10000]
+    p_test = proteins[501:800]
 
     transitions = init_transitions(p_train)
     #emissions_bi = init_emissions_bi(p_train)
     emissions = init_emissions(p_train)
     
+    if 'a' in STATES:
+        for p in p_test:
+            p.to_1_states()
+    true = [p.structure for p in p_test]
+    seqs = [p.group_seq for p in p_test]
     print("testing")
     kw_lists = [p.keywords for p in p_test]
     all_keywords = keyword_histogram(kw_lists)
