@@ -152,6 +152,7 @@ if __name__ == '__main__':
         matrix = calculate_posterior_group(p.group_seq, transitions_matrix, emissions_matrix)
         trace = trace_states(p.group_seq, matrix)
         # matrix, trace = calculate_viterbi(p.group_seq, transitions_matrix, emissions_matrix)
+        trace = Protein.revert_structure3(trace)
         pred.append(trace)
         true.append(p.structure)
         try:
