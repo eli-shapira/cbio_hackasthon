@@ -13,8 +13,10 @@ YELLOW = "\033[93m"
 PURPLE = "\033[35m"
 END = "\033[00m"
 
-STATES = ['s', 'A', 'B', 'T', 'O', 'e']
-STATE_TO_INDEX = {'s':0, 'A':1, 'B':2, 'T':3, 'O':4, 'e':5}
+SIMPLE_STATES = ['s', 'A', 'B', 'T', 'O', 'e']
+MULTI_STATES = ['s', '@', 'a', 'A', '&', 'b', 'B', '!', 't', 'T', 'O', 'e']
+STATES = MULTI_STATES
+STATE_TO_INDEX = {l: STATES.index(l) for l in STATES}
 NUM_STATES = len(STATES)
 
 # start, negative, positive, polar, hydrophobic, special, end

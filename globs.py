@@ -8,14 +8,19 @@ YELLOW = "\033[93m"
 PURPLE = "\033[35m"
 END = "\033[00m"
 
-STATES = ['s', 'A', 'B', 'T', 'O', 'e']
-STATE_TO_INDEX = {'s':0, 'A':1, 'B':2, 'T':3, 'O':4, 'e':5}
+# STATES = ['s', 'A', 'B', 'T', 'O', 'e']
+# STATE_TO_INDEX = {'s':0, 'A':1, 'B':2, 'T':3, 'O':4, 'e':5}
+
+STATES = ['s', '@', 'a', 'A', '&', 'b', 'B', '!', 't', 'T', 'O', 'e']
+STATE_TO_INDEX = {l: STATES.index(l) for l in STATES}
+
+
 NUM_STATES = len(STATES)
 
 
 # start, negative, positive, polar, hydrophobic, special, end
-EMISSIONS = ['0', '1', '2', '3', '4', '5', '6']
-# EMISSIONS = ['0', 'G', 'M', 'L', 'N', 'A', 'S', 'F', 'Y', 'T', 'I', 'W', 'Q', 'C', 'P', 'D', 'V', 'E', 'H', 'K', 'R', '1']
+# EMISSIONS = ['0', '1', '2', '3', '4', '5', '6']
+EMISSIONS = ['0', 'G', 'M', 'L', 'N', 'A', 'S', 'F', 'Y', 'T', 'I', 'W', 'Q', 'X', 'U', 'C', 'P', 'D', 'V', 'E', 'H', 'K', 'R', '1']
 NUM_EMISSIONS = len(EMISSIONS)
 
 # class Protein:
