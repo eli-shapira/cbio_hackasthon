@@ -82,6 +82,8 @@ def main():
     if 'a' in STATES:
         for p in p_test:
             p.to_1_states()
+
+    p_test = sorted(p_test, key=lambda x: len(x.group_seq))
     
     true = [p.structure for p in p_test]
     seqs = [p.group_seq for p in p_test]
@@ -92,10 +94,11 @@ def main():
     #pred_bi = batch_posterior(seqs, transitions, emissions_bi, True)
     #pred_viterbi = batch_viterbi(seqs, transitions, emissions)
     for p in p_test:
+        print(len(p.group_seq))
         pred = calculate_posterior(p.group_seq, transitions, emissions)
         # pred = calculate_viterbi(p.group_seq, transitions, emissions)
         # pred = revert_structure3(pred)
-        print(pred[:100])
+        # print(pred[:100])
         p.evaluate_prediction(pred)
 
     score_histogram(p_test, all_keywords)
