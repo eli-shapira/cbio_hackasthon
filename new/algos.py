@@ -62,9 +62,21 @@ def calculate_posterior(seq, transition_matrix, emission_matrix, bi=False):
     return trace
 
 def trace_states(seq, posterior_matrix):
-    trace = STATES[int(np.argmax(posterior_matrix[:, -1]))]
+    # pos_exp = np.exp(posterior_matrix)
+    pos = np.zeros((len(SIMPLE_STATES), posterior_matrix.shape[1]))
+    pos[0] = posterior_matrix[0]
+    pos[1] = logsumexp(posterior_matrix[1:4,:], axis=0)
+    pos[2] = logsumexp(posterior_matrix[4:7,:], axis=0)
+    pos[3] = logsumexp(posterior_matrix[7:10,:], axis=0)
+    pos[4:] = posterior_matrix[10:,:]
+    # print(np.exp(pos[:,:20]))
+    posterior_matrix = pos
+    trace = SIMPLE_STATES[int(np.argmax(posterior_matrix[:, -1]))]
     for j in range(1, len(seq)):
-        trace += STATES[int(np.argmax(posterior_matrix[:, -j - 1]))]
+        temp = SIMPLE_STATES[int(np.argmax(posterior_matrix[:, -j - 1]))]
+        # if temp not in SIMPLE_STATES:
+        #     print(temp)
+        trace += temp
     trace = trace[::-1]
     return trace
 

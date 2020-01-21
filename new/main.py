@@ -51,8 +51,10 @@ def average_score(proteins):
 
 def main():
 
-    PATH = 'data/prot_data_yeast'
+    PATH = 'data/prot_data_human'
     proteins = parse_file(PATH)
+    PATH = 'data/prot_data_yeast'
+    proteins += parse_file(PATH)
     print("len proteins:", len(proteins))
 
     #fil = filter_by_keyword(proteins, "Zinc-finger")
@@ -73,7 +75,10 @@ def main():
     transitions = init_transitions(p_train)
     #emissions_bi = init_emissions_bi(p_train)
     emissions = init_emissions(p_train)
-    
+    np.set_printoptions(precision=2, linewidth=250)
+    print(np.exp(transitions))
+    print(np.exp(emissions))
+    # return
     if 'a' in STATES:
         for p in p_test:
             p.to_1_states()
