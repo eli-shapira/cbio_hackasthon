@@ -2,7 +2,30 @@ from globs import *
 from parser import *
 from trainer import *
 from algos import *
+import matplotlib.pyplot as plt
+import random
+# from viz import calculate_error
 from Protein import revert_structure3
+
+def calculate_error(y1, y2, y3, name):
+
+    # if len(y)>300:
+    #     y = random.choices(y, k=300)
+        # y=y[:300]
+    min_len = min([len(y2), len(y3), len(y1)])
+    x=np.arange(min_len)
+    plt.ylabel("posterior error")
+    plt.xlabel("protein  sequences")
+    plt.ylim(top=1, bottom=0)
+    plt.title("posterior accuracies on sequences - " + name)
+    # ax = plt.figure()
+    # ax.set_xticklabels([])
+    plt.plot(x,y1[:min_len], label='short')
+    plt.plot(x,y2[:min_len], label='mid')
+    plt.plot(x,y3[:min_len], label='long')
+    plt.savefig(name + "_accChart.png")
+
+    plt.show()
 
 def filter_by_keyword(proteins, kw):
     print("filtering proteins by keyword:",RED,kw,END)
@@ -53,8 +76,8 @@ def main():
 
     PATH = 'data/prot_data_human'
     proteins = parse_file(PATH)
-    PATH = 'data/prot_data_yeast'
-    proteins += parse_file(PATH)
+    # PATH = 'data/prot_data_yeast'
+    # proteins += parse_file(PATH)
     print("len proteins:", len(proteins))
 
     #fil = filter_by_keyword(proteins, "Zinc-finger")
@@ -108,6 +131,18 @@ def main():
     score_histogram(p_test, all_keywords)
     average_score(p_test)
     print(acc / sum_len)
+    errors = [p.score for p in p_test]
+    break_point = int(len(errors) / 3)
+    err1 = sorted(errors[:break_point])
+    err2 = sorted(errors[break_point:-break_point])
+    err3 = sorted(errors[-break_point:])
+    # min_len = min(err1, err2, )
+    # calculate_error(errors, 'random')
+    # calculate_error(err1, 'short')
+    # calculate_error(err2, 'mid')
+    # calculate_error(err3, 'long')
+    calculate_error(err1, err2, err3, 'compare by sequence length')
+    # calculate_error(errors[-300:], 'human and yeats', 'long, human and yeats', '')
 
 
 if __name__ == "__main__":
